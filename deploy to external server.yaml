@@ -1,0 +1,45 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+# -------------------------
+# BUILD STAGE
+# -------------------------
+- stage: Build
+  displayName: "Build Stage"
+  jobs:
+  - job: BuildJob
+    steps:
+    - script: echo "Building App..."
+      displayName: "Build Step"
+
+    - script: |
+        mkdir output
+        echo "Hello from CI/CD" > output/app.txt
+      displayName: "Package Output"
+
+    - publish: output
+      artifact: drop
+
+# -------------------------
+# DEPLOY STAGE
+# -------------------------
+- stage: Deploy
+  displayName: "Deploy to External Server"
+  dependsOn: Build
+  pool:
+    name: "SelfHostedPool"   # Your external server agent
+  jobs:
+  - job: DeployJob
+    steps:
+    - download: current
+      artifact: drop
+
+    - script: |
+        echo "Deploying to external server..."
+        cp drop/app.txt /var/www/myapp/app.txt
+        systemctl restart myapp
+      displayName: "Copy files and restart service"
