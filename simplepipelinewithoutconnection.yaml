@@ -1,25 +1,25 @@
-trigger：
+trigger:
 - main
 
-pool: vnimage:
- 'ubuntu-latest'
+pool:
+  vmImage: 'ubuntu-latest'
 
 stages:
-- stage: Build 
-  displayName: "Build Stage' 
+- stage: Build
+  displayName: "Build Stage"
   jobs:
   - job: BuildJob
-    displayName: "Run Hello World Script' 
+    displayName: "Run Hello World Script"
     steps:
     - script: echo "Hello World"
-      displayName: 'Print Hello World'
+      displayName: "Print Hello World"
 
-- stage: Deploy 
-  displayName: "Deploy Stage' 
+- stage: Deploy
+  displayName: "Deploy Stage"
   dependsOn: Build
   jobs:
   - job: DeployJob
-    displayName: "Run Deploy Script' 
+    displayName: "Run Deploy Script"
     steps:
     - script: echo "Deploying"
-      displayName: 'Print Deploying'
+      displayName: "Print Deploying"
